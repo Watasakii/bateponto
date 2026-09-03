@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login - Ponto Eletrônico Anti-Fraude</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- Global Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <div class="auth-container">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="logo-icon">
+          <i class="ph-bold ph-fingerprint"></i>
+        </div>
+        <h1>Ponto Eletrônico</h1>
+        <p>Acesse com suas credenciais de usuário</p>
+      </div>
+
+      <div id="alert-message" style="display: none; padding: 0.75rem 1rem; margin-bottom: 1rem; border-radius: 6px; font-size: 0.875rem; background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;"></div>
+
+      <form id="login-form">
+        <div class="form-group">
+          <label for="username">Usuário / Email</label>
+          <div class="input-wrapper">
+            <i class="ph ph-user"></i>
+            <input type="text" id="username" class="form-control" placeholder="Digite seu usuário ou email" required autocomplete="username">
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="password">Senha</label>
+          <div class="input-wrapper">
+            <i class="ph ph-lock-key"></i>
+            <input type="password" id="password" class="form-control" placeholder="Digite sua senha" required autocomplete="current-password">
+          </div>
+        </div>
+
+        <button type="submit" class="btn btn-primary" id="btn-submit">
+          <i class="ph ph-sign-in"></i>
+          Entrar
+        </button>
+      </form>
+
+      <div class="auth-footer">
+        <p>&copy; Sistema de Ponto Eletrônico Anti-Fraude</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { login, requireAuth } from './js/auth.js';
+
+    // Se já estiver logado, redireciona para a página apropriada
+    requireAuth();
+
+    const form = document.getElementById('login-form');
+    const alertMessage = document.getElementById('alert-message');
+    const btnSubmit = document.getElementById('btn-submit');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertMessage.style.display = 'none';
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = '<i class="ph ph-spinner spinner"></i> Entrando...';
+
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      const result = await login(username, password);
+
+      if (result.success) {
+        if (result.user.role === 'admin') {
+          window.location.href = 'admin.html';
+        } else {
+          window.location.href = 'employee.html';
+        }
+      } else {
+        alertMessage.textContent = result.message || 'Falha na autenticação.';
+        alertMessage.style.display = 'block';
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<i class="ph ph-sign-in"></i> Entrar';
+      }
+    });
+  </script>
+</body>
+</html>

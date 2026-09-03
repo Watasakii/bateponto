@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel do Funcionário - Ponto Eletrônico</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+
+  <!-- Global Stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    /* Estilos Específicos do Painel do Funcionário */
+    .app-header {
+      background-color: var(--card-bg);
+      border-bottom: 1px solid var(--border-color);
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .app-header .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      font-weight: 700;
+      font-size: 1.125rem;
+      color: var(--primary-color);
+    }
+
+    .app-header .brand i {
+      font-size: 1.5rem;
+    }
+
+    .user-profile {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .user-name {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .btn-logout {
+      background: none;
+      border: 1px solid var(--border-color);
+      padding: 0.4rem 0.8rem;
+      border-radius: var(--radius-sm);
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.875rem;
+      transition: all 0.2s ease;
+    }
+
+    .btn-logout:hover {
+      background-color: #fee2e2;
+      color: var(--danger-color);
+      border-color: #fca5a5;
+    }
+
+    .container {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 0 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .punch-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-md);
+      padding: 2.5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    .clock-display {
+      font-size: 2.5rem;
+      font-weight: 700;
+      letter-spacing: -0.5px;
+      color: var(--primary-color);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .date-display {
+      font-size: 1rem;
+      color: var(--text-muted);
+      margin-top: -1rem;
+    }
+
+    /* Botões Dinâmicos de Registro de Ponto */
+    .btn-clock {
+      padding: 1.25rem 3rem;
+      font-size: 1.25rem;
+      font-weight: 700;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.75rem;
+      box-shadow: var(--shadow-md);
+      transition: all 0.2s ease;
+      width: auto;
+      max-width: 320px;
+    }
+
+    .btn-clock-in {
+      background-color: var(--success-color);
+      color: #ffffff;
+    }
+
+    .btn-clock-in:hover {
+      background-color: #059669;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    .btn-clock-out {
+      background-color: var(--danger-color);
+      color: #ffffff;
+    }
+
+    .btn-clock-out:hover {
+      background-color: #dc2626;
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
+    }
+
+    /* Modais */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-card {
+      background: var(--card-bg);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      width: 100%;
+      max-width: 500px;
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .btn-close-modal {
+      background: none;
+      border: none;
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    /* Video / Câmera */
+    .camera-container {
+      width: 100%;
+      height: 280px;
+      background-color: #000;
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .camera-container video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .camera-container canvas {
+      display: none;
+    }
+
+    /* Ticket / Comprovante */
+    .ticket-box {
+      border: 2px dashed var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      background-color: #fafafa;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .ticket-header {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: var(--primary-color);
+    }
+
+    .ticket-details {
+      width: 100%;
+      text-align: left;
+      font-size: 0.9rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .ticket-details div {
+      display: flex;
+      justify-content: space-between;
+      border-bottom: 1px solid #eaeaea;
+      padding-bottom: 0.25rem;
+    }
+
+    .qr-code-img {
+      width: 140px;
+      height: 140px;
+      margin-top: 0.5rem;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--border-color);
+    }
+
+    /* Seções e Tabelas */
+    .card-section {
+      background: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .section-title {
+      font-size: 1.125rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--primary-color);
+    }
+
+    .records-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .records-table th {
+      background-color: #f1f5f9;
+      padding: 0.75rem 1rem;
+      font-weight: 600;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .records-table td {
+      padding: 0.85rem 1rem;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 0.25rem 0.6rem;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .badge-success {
+      background-color: #d1fae5;
+      color: #065f46;
+    }
+
+    .badge-warning {
+      background-color: #fef3c7;
+      color: #92400e;
+    }
+
+    .badge-danger {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header App -->
+  <header class="app-header">
+    <div class="brand">
+      <i class="ph-bold ph-fingerprint"></i>
+      <span>Ponto Eletrônico Anti-Fraude</span>
+    </div>
+    <div class="user-profile">
+      <span class="user-name" id="user-display-name">Carregando...</span>
+      <button class="btn-logout" id="btn-logout">
+        <i class="ph ph-sign-out"></i> Sair
+      </button>
+    </div>
+  </header>
+
+  <!-- Container Principal -->
+  <main class="container">
+    <!-- Card de Registro Central -->
+    <section class="punch-card">
+      <div class="clock-display" id="live-clock">00:00:00</div>
+      <div class="date-display" id="live-date">Carregando data...</div>
+
+      <div id="punch-status-container">
+        <!-- O botão dinâmico será renderizado via JS -->
+        <button id="btn-punch" class="btn-clock btn-clock-in" disabled>
+          <i class="ph-bold ph-spinner spinner"></i> Verificando status...
+        </button>
+      </div>
+    </section>
+
+    <!-- Histórico de Registros -->
+    <section class="card-section">
+      <h2 class="section-title">
+        <i class="ph ph-clock-counter-clockwise"></i> Histórico Recente de Pontos
+      </h2>
+      <div style="overflow-x: auto;">
+        <table class="records-table">
+          <thead>
+            <tr>
+              <th>Data</th>
+              <th>Entrada</th>
+              <th>Saída</th>
+              <th>Status</th>
+              <th>Alertas / Flags</th>
+            </tr>
+          </thead>
+          <tbody id="records-table-body">
+            <tr>
+              <td colspan="5" style="text-align: center; color: var(--text-muted);">Carregando registros...</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- Formulário de Justificativa -->
+    <section class="card-section">
+      <h2 class="section-title">
+        <i class="ph ph-note-pencil"></i> Enviar Justificativa / Atestado
+      </h2>
+      <form id="justification-form" style="display: flex; flex-direction: column; gap: 1rem;">
+        <div class="form-group">
+          <label for="justification-desc">Descrição do Motivo (atraso, ausência, etc.)</label>
+          <textarea id="justification-desc" class="form-control" rows="3" placeholder="Descreva o motivo da justificativa" required style="padding-left: 1rem; resize: vertical;"></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary" style="width: auto; align-self: flex-start;">
+          <i class="ph ph-paper-plane-right"></i> Enviar Justificativa
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <!-- Modal da Câmera -->
+  <div class="modal-overlay" id="modal-camera">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="ph ph-camera"></i> Confirmação Facial</h3>
+        <button class="btn-close-modal" id="btn-close-camera">&times;</button>
+      </div>
+
+      <p style="font-size: 0.875rem; color: var(--text-muted);">
+        Posicione seu rosto em frente à câmera e clique no botão para capturar sua foto e registrar o ponto.
+      </p>
+
+      <div class="camera-container">
+        <video id="video-feed" autoplay playsinline></video>
+        <canvas id="photo-canvas"></canvas>
+      </div>
+
+      <button class="btn btn-primary" id="btn-capture-photo">
+        <i class="ph ph-aperture"></i> Capturar Foto e Confirmar
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal do Ticket / Comprovante -->
+  <div class="modal-overlay" id="modal-ticket">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3><i class="ph ph-check-circle" style="color: var(--success-color);"></i> Comprovante do Ponto</h3>
+        <button class="btn-close-modal" id="btn-close-ticket">&times;</button>
+      </div>
+
+      <div class="ticket-box">
+        <div class="ticket-header" id="ticket-action-type">REGISTRO DE ENTRADA</div>
+
+        <div class="ticket-details">
+          <div><span>Funcionário:</span> <strong id="ticket-user-name">-</strong></div>
+          <div><span>Data e Hora:</span> <strong id="ticket-timestamp">-</strong></div>
+          <div><span>Localização GPS:</span> <strong id="ticket-coords">-</strong></div>
+          <div><span>Status Geofence:</span> <strong id="ticket-geofence">-</strong></div>
+        </div>
+
+        <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">
+          Autenticidade Verificada via QR Code
+        </p>
+
+        <img id="ticket-qrcode" src="" alt="QR Code Comprovante" class="qr-code-img">
+      </div>
+
+      <button class="btn btn-primary" id="btn-finish-ticket">
+        Concluir
+      </button>
+    </div>
+  </div>
+
+  <!-- Módulos JavaScript -->
+  <script type="module" src="js/employee.js"></script>
+</body>
+</html>
