@@ -61,7 +61,7 @@
   <script type="module">
     import { login, requireAuth } from './js/auth.js';
 
-    // Se já estiver logado, redireciona para a página apropriada
+    // Se já estiver logado, redireciona para a página do funcionário
     requireAuth();
 
     const form = document.getElementById('login-form');
@@ -80,11 +80,8 @@
       const result = await login(username, password);
 
       if (result.success) {
-        if (result.user.role === 'admin') {
-          window.location.href = 'admin.html';
-        } else {
-          window.location.href = 'employee.html';
-        }
+        // Redireciona diretamente para employee.html conforme especificado
+        window.location.href = 'employee.html';
       } else {
         alertMessage.textContent = result.message || 'Falha na autenticação.';
         alertMessage.style.display = 'block';

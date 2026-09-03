@@ -15,9 +15,9 @@ Este documento registra e acompanha o progresso do desenvolvimento de todas as t
 
 ### 2. Módulo de Autenticação e Sessão
 - [x] Criar `js/auth.js` para controle de formulário de login (usuário e senha).
-- [x] Implementar verificação consultando a tabela `users` no Supabase (admin / funcionário).
+- [x] Implementar verificação consultando a tabela `users` no Supabase.
 - [x] Configurar controle de sessão no `localStorage` e suporte a logout.
-- [x] Implementar redirecionamento automático baseado na role (`admin.html` vs `employee.html`).
+- [x] Ajustar redirecionamento de login pós-autenticação para direcionar diretamente para `employee.html`.
 
 ### 3. Painel do Funcionário (`employee.html` & `js/employee.js`)
 - [x] Criar layout do painel do funcionário com status do turno (Botão dinâmico "Abrir Ponto" / "Encerrar Turno").
@@ -50,3 +50,4 @@ Este documento registra e acompanha o progresso do desenvolvimento de todas as t
 ## 📌 Histórico de Alterações
 - **[Ajuste Estrutura Inicial]**: Inicializado repositório e cliente Supabase.
 - **[Painel do Funcionário]**: Criados `employee.html`, `js/employee.js`, `js/auth.js` e `js/utils.js` com fluxo de bater ponto por foto e GPS, geofencing, ticket com QR Code e histórico.
+- **[Ajuste Fluxo Login]**: Atualizado redirecionamento após autenticação em `index.html` e `js/auth.js` para direcionar diretamente para `employee.html`.
