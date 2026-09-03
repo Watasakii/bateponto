@@ -27,6 +27,8 @@
         <p>Acesse com suas credenciais de usuário</p>
       </div>
 
+      <div id="alert-message" style="display: none; padding: 0.75rem 1rem; margin-bottom: 1rem; border-radius: 6px; font-size: 0.875rem; background-color: #fee2e2; color: #991b1b; border: 1px solid #fca5a5;"></div>
+
       <form id="login-form">
         <div class="form-group">
           <label for="username">Usuário / Email</label>
@@ -57,8 +59,39 @@
   </div>
 
   <script type="module">
-    import { supabase } from './js/supabase-client.js';
-    console.log('Supabase Client carregado com sucesso:', supabase);
+    import { login, requireAuth } from './js/auth.js';
+
+    // Se já estiver logado, redireciona para a página apropriada
+    requireAuth();
+
+    const form = document.getElementById('login-form');
+    const alertMessage = document.getElementById('alert-message');
+    const btnSubmit = document.getElementById('btn-submit');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      alertMessage.style.display = 'none';
+      btnSubmit.disabled = true;
+      btnSubmit.innerHTML = '<i class="ph ph-spinner spinner"></i> Entrando...';
+
+      const username = document.getElementById('username').value.trim();
+      const password = document.getElementById('password').value.trim();
+
+      const result = await login(username, password);
+
+      if (result.success) {
+        if (result.user.role === 'admin') {
+          window.location.href = 'admin.html';
+        } else {
+          window.location.href = 'employee.html';
+        }
+      } else {
+        alertMessage.textContent = result.message || 'Falha na autenticação.';
+        alertMessage.style.display = 'block';
+        btnSubmit.disabled = false;
+        btnSubmit.innerHTML = '<i class="ph ph-sign-in"></i> Entrar';
+      }
+    });
   </script>
 </body>
 </html>
