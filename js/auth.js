@@ -79,9 +79,9 @@ export async function login(usernameOrEmail, password) {
 
 /**
  * Verifica se a página atual é protegida e redireciona de acordo com o estado do login.
- * @param {Array<string>} [allowedRoles] Roles permitidas na página atual (ex: ['admin'] ou ['employee'])
+ * Não utiliza redirecionamentos para admin.html; todos os usuários logados acessam employee.html.
  */
-export function requireAuth(allowedRoles = []) {
+export function requireAuth() {
   const user = getCurrentUser();
   const currentPath = window.location.pathname;
 
