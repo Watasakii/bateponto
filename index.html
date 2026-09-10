@@ -15,6 +15,24 @@
 
   <!-- Global Stylesheet -->
   <link rel="stylesheet" href="css/style.css">
+  <style>
+    .register-link {
+      margin-top: 1.25rem;
+      text-align: center;
+      font-size: 0.875rem;
+    }
+
+    .register-link a {
+      color: var(--primary-color);
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    .register-link a:hover {
+      text-decoration: underline;
+    }
+  </style>
 </head>
 <body>
   <div class="auth-container">
@@ -52,6 +70,11 @@
         </button>
       </form>
 
+      <div class="register-link">
+        <span>Não tem uma conta?</span>
+        <a href="register.html" id="btn-goto-register">Cadastre-se</a>
+      </div>
+
       <div class="auth-footer">
         <p>&copy; Sistema de Ponto Eletrônico Anti-Fraude</p>
       </div>
@@ -80,7 +103,6 @@
       const result = await login(username, password);
 
       if (result.success) {
-        // Redireciona diretamente para employee.html conforme especificado
         window.location.href = 'employee.html';
       } else {
         alertMessage.textContent = result.message || 'Falha na autenticação.';

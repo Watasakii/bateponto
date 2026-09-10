@@ -13,11 +13,13 @@ Este documento registra e acompanha o progresso do desenvolvimento de todas as t
 - [x] Criar `js/supabase-client.js` configurando a inicialização e exportação da instância do Supabase via CDN.
 - [x] Criar `index.html` com a estrutura da tela de login inicial.
 
-### 2. Módulo de Autenticação e Sessão
+### 2. Módulo de Autenticação, Sessão e Registro
 - [x] Criar `js/auth.js` para controle de formulário de login (usuário e senha).
 - [x] Implementar verificação consultando a tabela `users` no Supabase.
 - [x] Configurar controle de sessão no `localStorage` e suporte a logout.
-- [x] Unificar o direcionamento de login pós-autenticação para direcionar todos os usuários (inclusive contas de admin) diretamente para `employee.html`.
+- [x] Unificar o direcionamento de login pós-autenticação para direcionar todos os usuários diretamente para `employee.html`.
+- [x] Adicionar link/botão na tela de login (`index.html`) para acessar a página de cadastro.
+- [x] Criar página de registro (`register.html`) e lógica (`js/register.js`) para inserção de novos usuários na tabela `users` do Supabase.
 
 ### 3. Painel do Funcionário (`employee.html` & `js/employee.js`)
 - [x] Criar layout do painel do funcionário com status do turno (Botão dinâmico "Abrir Ponto" / "Encerrar Turno").
@@ -43,3 +45,4 @@ Este documento registra e acompanha o progresso do desenvolvimento de todas as t
 - **[Ajuste Estrutura Inicial]**: Inicializado repositório e cliente Supabase.
 - **[Painel do Funcionário]**: Criados `employee.html`, `js/employee.js`, `js/auth.js` e `js/utils.js` com fluxo de bater ponto por foto e GPS, geofencing, ticket com QR Code e histórico.
 - **[Ajuste Fluxo Login]**: Removido redirecionamento para `admin.html` em `js/auth.js` e `js/employee.js`. Todos os usuários logados acessam exclusivamente a página `employee.html`.
+- **[Módulo de Cadastro]**: Adicionado botão de cadastro em `index.html`, criada a tela `register.html` e o módulo `js/register.js` para criação de novos usuários no Supabase.
