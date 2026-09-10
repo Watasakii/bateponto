@@ -78,10 +78,10 @@ export async function login(usernameOrEmail, password) {
 }
 
 /**
- * Verifica se a página atual é protegida e redireciona de acordo com o estado do login e perfil.
- * @param {Array<string>} [allowedRoles] Roles permitidas na página atual (ex: ['admin'] ou ['employee'])
+ * Verifica se a página atual é protegida e redireciona de acordo com o estado do login.
+ * Não utiliza redirecionamentos para admin.html; todos os usuários logados acessam employee.html.
  */
-export function requireAuth(allowedRoles = []) {
+export function requireAuth() {
   const user = getCurrentUser();
   const currentPath = window.location.pathname;
 
@@ -92,21 +92,10 @@ export function requireAuth(allowedRoles = []) {
     return null;
   }
 
+  // Se o usuário estiver na tela de login e já estiver logado, redireciona sempre para employee.html
   if (currentPath.endsWith('index.html') || currentPath === '/') {
-    if (user.role === 'admin') {
-      window.location.href = 'admin.html';
-    } else {
-      window.location.href = 'employee.html';
-    }
+    window.location.href = 'employee.html';
     return user;
-  }
-
-  if (allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
-    if (user.role === 'admin') {
-      window.location.href = 'admin.html';
-    } else {
-      window.location.href = 'employee.html';
-    }
   }
 
   return user;

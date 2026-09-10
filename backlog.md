@@ -15,9 +15,9 @@ Este documento registra e acompanha o progresso do desenvolvimento de todas as t
 
 ### 2. Módulo de Autenticação e Sessão
 - [x] Criar `js/auth.js` para controle de formulário de login (usuário e senha).
-- [x] Implementar verificação consultando a tabela `users` no Supabase (admin / funcionário).
+- [x] Implementar verificação consultando a tabela `users` no Supabase.
 - [x] Configurar controle de sessão no `localStorage` e suporte a logout.
-- [x] Implementar redirecionamento automático baseado na role (`admin.html` vs `employee.html`).
+- [x] Unificar o direcionamento de login pós-autenticação para direcionar todos os usuários (inclusive contas de admin) diretamente para `employee.html`.
 
 ### 3. Painel do Funcionário (`employee.html` & `js/employee.js`)
 - [x] Criar layout do painel do funcionário com status do turno (Botão dinâmico "Abrir Ponto" / "Encerrar Turno").
@@ -30,15 +30,7 @@ Este documento registra e acompanha o progresso do desenvolvimento de todas as t
 - [x] Criar tabela de histórico de pontos batidos pelo funcionário.
 - [x] Criar formulário de justificativas e atestados com inserção na tabela `justifications`.
 
-### 4. Painel do Administrador (`admin.html` & `js/admin.js`)
-- [ ] Criar layout do painel administrativo com estatísticas e tempo real (funcionários trabalhando vs ausentes).
-- [ ] Criar Fila de Análise para registros marcados com `is_flagged = true` ou `status = 'pending'`.
-- [ ] Exibir modal/detalhes com a foto capturada, mapa/localização e motivo do alerta.
-- [ ] Implementar ações de aprovação e rejeição de registros de ponto.
-- [ ] Criar tela de Gestão de Justificativas com ações para aprovar ou rejeitar.
-- [ ] Criar formulário de Configurações da Empresa (alteração de Latitude, Longitude e Raio de tolerância em `company_settings`).
-
-### 5. Utilidades e Estilização Geral (`js/utils.js`)
+### 4. Utilidades e Estilização Geral (`js/utils.js`)
 - [x] Desenvolver `js/utils.js` com funções utilitárias:
   - Cálculo da fórmula de Haversine para cálculo de distância entre coordenadas GPS.
   - Formatação de data e hora no padrão brasileiro.
@@ -50,3 +42,4 @@ Este documento registra e acompanha o progresso do desenvolvimento de todas as t
 ## 📌 Histórico de Alterações
 - **[Ajuste Estrutura Inicial]**: Inicializado repositório e cliente Supabase.
 - **[Painel do Funcionário]**: Criados `employee.html`, `js/employee.js`, `js/auth.js` e `js/utils.js` com fluxo de bater ponto por foto e GPS, geofencing, ticket com QR Code e histórico.
+- **[Ajuste Fluxo Login]**: Removido redirecionamento para `admin.html` em `js/auth.js` e `js/employee.js`. Todos os usuários logados acessam exclusivamente a página `employee.html`.

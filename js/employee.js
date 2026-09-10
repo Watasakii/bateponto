@@ -2,8 +2,8 @@ import { supabase } from './supabase-client.js';
 import { requireAuth, logout } from './auth.js';
 import { calculateDistanceMeters, formatDate, formatTime, formatDateTime, dataURLtoBlob } from './utils.js';
 
-// Exige autenticação de funcionário (ou admin testando como funcionário)
-const currentUser = requireAuth(['employee', 'admin']);
+// Exige autenticação (qualquer usuário logado no sistema)
+const currentUser = requireAuth();
 
 // Estado local da aplicação
 let openRecord = null;
@@ -444,7 +444,7 @@ async function handleJustificationSubmit(e) {
 
     if (error) throw error;
 
-    alert('Justificativa enviada com sucesso! Ela será analisada pelo administrador.');
+    alert('Justificativa enviada com sucesso! Ela será analisada pelo sistema.');
     descInput.value = '';
   } catch (err) {
     console.error('Erro ao enviar justificativa:', err);
